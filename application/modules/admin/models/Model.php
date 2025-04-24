@@ -8,6 +8,7 @@ class Model extends CI_Model {
 
 	function getResult($table){
 		$this->db->from($table);
+		// $this->db->order_by($table, 'lastname', 'DESC');
 		return $this->db->get()->result();
 	}
 

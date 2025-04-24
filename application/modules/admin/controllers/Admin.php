@@ -5,7 +5,26 @@ class Admin extends MX_Controller {
 	public function __construct() {
         parent::__construct();
    		$this->load->model(array('model'));
-    } 
+   		$this->load->libraries(array('ciqrcode'));
+    }
+
+    public function generateQR($id) {
+    	$where = ['id'=>$id];
+    	$row = $this->model->getRow('users', $where);
+    	$params['data'] = $row->firstname.' '.$row->lastname.' '.$row->address;
+    	$params['level'] = 'H';
+    	$params['size'] = 10;
+    	$params['savename'] = FCPATH.'assets/qr_images/qr_'.$row->id.'_'.$row->firstname.'.png';
+    	if($this->ciqrcode->generate($params)) {
+    		$this->session->set_flashdata('message',"QR code successfully created.");
+			$this->session->set_flashdata('icon','success');
+			
+		} else {
+			$this->session->set_flashdata('message',"Error.");
+			$this->session->set_flashdata('icon','error');
+    	}
+    	redirect(base_url('admin/users/'));
+    }
 
 	public function index() {
 		$data['information'] = $this->checkdata();

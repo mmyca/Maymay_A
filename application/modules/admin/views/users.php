@@ -36,7 +36,8 @@
                                         <th>Gender</th>
                                         <th>Birth of Date</th>
                                         <th>Email Address</th>
-                                        <th>Role</th>
+                                        <th>User Type</th>
+                                        <th>QR Code</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -53,6 +54,16 @@
                                         <td><?= $user->bod ?></td>
                                         <td><?= $user->email_add ?></td>
                                         <td><?= $user->usertype ?></td>
+                                        <td>
+                                            <?php
+                                                $path = 'assets/qr_images/qr_'.$user->id.'_'.$user->firstname.'.png';
+                                                // var_dump(file_exists(FCPATH.$path));
+                                                if(file_exists(FCPATH.$path)) {?>
+                                                    <img src="<?= base_url($path)?>" style="width: 100%">
+                                                <?php } else { ?>
+                                                    <a href="<?= base_url('admin/generateQR/'.$user->id) ?>" class="btn btn-primary">Generate QR Code</a>
+                                                <?php } ?>
+                                        </td>
                                         <td>
                                             <!-- Edit Button (Triggers Modal) -->
                                             <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#editModal<?= $user->id ?>">
@@ -107,6 +118,11 @@
                                                             <label>Birth of Date</label>
                                                             <input type="text" class="form-control" value="<?= $user->bod ?>" disabled>
                                                             <input type="hidden" name="bod" value="<?= $user->bod ?>">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Email Address</label>
+                                                            <input type="text" class="form-control" value="<?= $user->email_add ?>" disabled>
+                                                            <input type="hidden" name="email_add" value="<?= $user->email_add ?>">
                                                         </div>
                                                         <div class="form-group">
                                                             <label>Email Address</label>
