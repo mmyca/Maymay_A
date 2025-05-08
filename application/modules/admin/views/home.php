@@ -57,20 +57,6 @@
                     </div>
                     <!-- /.info-box -->
                   </div>
-                  <!-- /.col -->
-                  <div class="col-12 col-sm-6 col-md-3">
-                    <div class="info-box mb-3">
-                      <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-users"></i></span>
-
-                      <div class="info-box-content">
-                        <span class="info-box-text">New Members</span>
-                        <span class="info-box-number">2,000</span>
-                      </div>
-                      <!-- /.info-box-content -->
-                    </div>
-                    <!-- /.info-box -->
-                  </div>
-                  <!-- /.col -->
                 </div>
                 <!-- /.row -->
                 <div class="row mb-2">
@@ -85,18 +71,18 @@
                         <h3 class="card-title">User List</h3>
                         <div class="card-tools d-flex">
                           <!-- Search Form -->
-                          <form action="<?= base_url('admin/search/') ?>" method="get">
+                          <form action="<?= base_url('admin/search') ?>" method="get">
                             <div class="card-tools">
-                              <div class="input-group input-group-sm" style="width: 150px;">
-                                <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
-                                <div class="input-group-append">
-                                  <button type="submit" class="btn btn-default">
-                                    <i class="fas fa-search"></i>
-                                  </button>
+                                <div class="input-group input-group-sm" style="width: 150px;">
+                                    <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn btn-default">
+                                            <i class="fas fa-search"></i>
+                                        </button>
+                                    </div>
                                 </div>
-                              </div>
                             </div>
-                          </form>
+                        </form>
                       </div>
                       <!-- /.card-header -->
                       <div class="card-body table-responsive p-0">
@@ -109,7 +95,8 @@
                               <th>Gender</th>
                               <th>Birth of Date</th>
                               <th>Email Address</th>
-                              <th>Role</th>
+                              <th>User Type</th>
+                              <th>QR Code</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -125,6 +112,18 @@
                                 <td><?= $user->bod ?></td>
                                 <td><?= $user->email_add ?></td>
                                 <td><?= $user->usertype?></td>
+                                <td>
+                                  <?php
+                                    $path = 'assets/qr_images/qr_'.$user->id.'_'.$user->firstname.'.png';
+                                    // var_dump(file_exists(FCPATH.$path));
+                                    if(file_exists(FCPATH.$path)) {?>
+                                        <img src="<?= base_url($path)?>" style="width: 80%">
+                                    <?php } else { ?>
+                                        <a href="<?= base_url('admin/generateQR/'.$user->id) ?>"></a>
+                                    <?php } 
+                                  ?>
+                                </td>
+
                             </tr>
                             <?php }?>
 

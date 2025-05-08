@@ -26,6 +26,28 @@ class Admin extends MX_Controller {
     	redirect(base_url('admin/users/'));
     }
 
+    public function deleteQR($user_id) {
+	    // Path to the QR code image
+	    $path = FCPATH . 'assets/qr_images/qr_' . $user_id . '_*.png';
+
+	    // Get the specific file path for the user's QR code
+	    $files = glob($path);
+	    
+	    if(count($files) > 0) {
+	        // Delete the file
+	        unlink($files[0]); // Only deletes the first matched file
+	        $this->session->set_flashdata('message', 'QR Code deleted successfully!');
+	        $this->session->set_flashdata('icon', 'success');
+	    } else {
+	        $this->session->set_flashdata('message', 'QR Code not found.');
+	        $this->session->set_flashdata('icon', 'error');
+	    }
+
+	    // Redirect back to the users list
+	    redirect('admin/users');
+	}
+
+
 	public function index() {
 		$data['information'] = $this->checkdata();
 		$data['users'] = $this->model->getResult('users');
@@ -40,6 +62,7 @@ class Admin extends MX_Controller {
 		$this->load->view('topnavbar');
 		$this->load->view('sidebar',$data);
 		$this->load->view('home', $data);
+		$this->load->view('scan');
 		$this->load->view('footer');
 	} 
 
@@ -51,6 +74,7 @@ class Admin extends MX_Controller {
 		$this->load->view('topnavbar');
 		$this->load->view('sidebar',$data);
 		$this->load->view('users', $data);
+		$this->load->view('scan');
 		$this->load->view('footer');
 	}
 
@@ -71,6 +95,31 @@ class Admin extends MX_Controller {
 		}
 	}
 
+	public function scan(){
+		$data['information'] = $this->checkdata();
+
+		$this->load->view('head');
+		$this->load->view('topnavbar');
+		$this->load->view('sidebar',$data);
+		$this->load->view('scan');
+		$this->load->view('footer');
+	}
+
+	public function handleQRScan() {
+	    $qrData = $this->input->post('qrData');
+
+	    // Process the scanned QR data here, like searching a user by ID or QR content.
+	    // Example: Fetch user from database
+	    $user = $this->user_model->getUserByQR($qrData);
+
+	    if ($user) {
+	        echo json_encode(['status' => 'success', 'user' => $user]);
+	    } else {
+	        echo json_encode(['status' => 'error', 'message' => 'QR code not recognized']);
+	    }
+	}
+
+
 	public function delete($id) {
 		$where = ['id'=>$id];
 		if($this->model->deleteData('users',$where)){
@@ -84,18 +133,45 @@ class Admin extends MX_Controller {
 	    redirect('admin/users/');
 	}
 
+	// public function search() {
+	//     $keyword = $this->input->get('table_search'); // from the search input
+
+	//     // Search query using CI's Query Builder
+	//     $this->db->like('firstname', $keyword);
+	//     $this->db->or_like('lastname', $keyword);
+	//     $this->db->or_like('email_add', $keyword);
+
+	//     $data['users'] = $this->db->get('users')->result();
+
+	//     $this->load->view('home', $data); // Adjust this to your actual view file
+	// }
+
 	public function search() {
-	    $keyword = $this->input->get('table_search'); // from the search input
+	    $keyword = $this->input->get('table_search'); // Get the input
+	    if(!empty($keyword)){
+	        $this->db->like('firstname', $keyword);
+	        $this->db->or_like('middlename', $keyword);
+	        $this->db->or_like('lastname', $keyword);
+	        $this->db->or_like('address', $keyword);
+	        $this->db->or_like('gender', $keyword);
+	        $this->db->or_like('email_add', $keyword);
+	        $this->db->or_like('usertype', $keyword);
+	    }
+	    $users = $this->db->get('users')->result(); // Query users table
 
-	    // Search query using CI's Query Builder
-	    $this->db->like('firstname', $keyword);
-	    $this->db->or_like('lastname', $keyword);
-	    $this->db->or_like('email_add', $keyword);
+	    // Also count admins and users again for the dashboard boxes
+	    $admin_count = $this->db->where('usertype', 'Admin')->count_all_results('users');
+	    $user_count = $this->db->where('usertype', 'User')->count_all_results('users');
 
-	    $data['users'] = $this->db->get('users')->result();
+	    $data = [
+	        'users' => $users,
+	        'admin_count' => $admin_count,
+	        'user_count' => $user_count,
+	    ];
 
-	    $this->load->view('home', $data); // Adjust this to your actual view file
+	    $this->load->view('admin/home', $data);
 	}
+
 
 	public function registration(){
 		$this->load->view('registration');
@@ -152,4 +228,10 @@ class Admin extends MX_Controller {
         $this->session->set_flashdata('icon','success');
         redirect('admin/users/'); // Adjust the route as necessary
     }
+
+    public function logout() {
+	    $this->session->sess_destroy();
+	    $message = base64_encode("You have successfully logged out.");
+	    redirect(base_url('?m/'.$message));
+	}
 }

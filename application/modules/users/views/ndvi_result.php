@@ -19,8 +19,8 @@
                     <div class="card">
                       <div class="card-header">
                         <h1 class="m-0">
-                        	<i class="nav-icon fas fa-fighter-jet"></i>
-                        	...
+                        	<i class="nav-icon fas fa-file-image"></i>
+                        	loading . . .
                         </h1>
                         <div class="card-tools d-flex">
                           

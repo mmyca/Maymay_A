@@ -1,4 +1,4 @@
-<!-- Content Wrapper -->
+Content Wrapper -->
 <div class="content-wrapper">
     <div class="content-header">
         <div class="container-fluid">
@@ -57,13 +57,27 @@
                                         <td>
                                             <?php
                                                 $path = 'assets/qr_images/qr_'.$user->id.'_'.$user->firstname.'.png';
-                                                // var_dump(file_exists(FCPATH.$path));
-                                                if(file_exists(FCPATH.$path)) {?>
-                                                    <img src="<?= base_url($path)?>" style="width: 100%">
+                                                if(file_exists(FCPATH.$path)) { ?>
+                                                    <div style="text-align: center;">
+                                                        <img id="qrImage<?= $user->id ?>" src="<?= base_url($path) ?>" style="width: 80%; max-width: 120px; margin-bottom: 5px;">
+                                                        <BR>
+                                                        <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#qrScannerModal" onclick="startScanner()">
+                                                            <i class="fas fa-qrcode"></i>
+                                                        </button>
+                                                        <a href="<?= base_url('admin/deleteQR/'.$user->id) ?>" 
+                                                           class="btn btn-danger btn-sm" 
+                                                           onclick="return confirm('Are you sure you want to delete this QR Code?');">
+                                                            <i class="fas fa-trash"></i>
+                                                        </a>
+                                                    </div>
                                                 <?php } else { ?>
-                                                    <a href="<?= base_url('admin/generateQR/'.$user->id) ?>" class="btn btn-primary">Generate QR Code</a>
-                                                <?php } ?>
+                                                    <a href="<?= base_url('admin/generateQR/'.$user->id) ?>" class="btn btn-primary">
+                                                        <i class="fas fa-qrcode"></i> Generate
+                                                    </a>
+                                                <?php } 
+                                            ?>
                                         </td>
+
                                         <td>
                                             <!-- Edit Button (Triggers Modal) -->
                                             <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#editModal<?= $user->id ?>">
@@ -152,6 +166,29 @@
     </section>
 </div>
 
+<!-- QR Scanner Modal -->
+<div class="modal fade" id="qrScannerModal" tabindex="-1" aria-labelledby="qrScannerModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="qrScannerModalLabel">Scan QR Code</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="stopScanner()"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Video Element to Show Camera Feed -->
+                <video id="qrScannerVideo" style="width: 100%; height: auto;" autoplay></video>
+                <br>
+                <div id="scanResult" class="mt-3"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="stopScanner()">Close</button>
+                <button type="button" class="btn btn-primary" onclick="stopScanner()">Stop Scanning</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <!-- Add User Modal -->
 <div class="modal fade" id="addUserModal">
     <div class="modal-dialog">
@@ -209,4 +246,4 @@
         </div>
     </div>
 </div>
-<!-- End Add User Modal -->
+<!-- End Add User Modal

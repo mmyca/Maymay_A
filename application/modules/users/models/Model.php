@@ -6,6 +6,12 @@ class Model extends CI_Model {
 		return $this->db->get()->row();
 	}
 
+	function getResult($table){
+		$this->db->from($table);
+		$this->db->order_by('lastname', 'ASC');
+		return $this->db->get()->result();
+	}
+
 	function insertData($table,$data){
 		return $this->db->insert($table,$data);
 	}
