@@ -17,7 +17,7 @@
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <li class="nav-item">
-                    <a href="<?= base_url('users/'); ?>" class="nav-link <?= $this->uri->segment(2) == null ? 'active' : '' ?>">
+                    <a href="<?= base_url('users/home'); ?>" class="nav-link <?= $this->uri->segment(2) == null ? 'active' : '' ?>">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>Dashboard</p>
                     </a>

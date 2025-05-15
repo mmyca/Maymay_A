@@ -19,8 +19,36 @@
                     <div class="card">
                       <div class="card-header">
                         <h1 class="m-0">
-                        	<i class="nav-icon fas fa-file-image"></i>
-                        	loading . . .
+                            <?php
+                                $dir = FCPATH . 'assets/ndvi/';
+                                $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+
+                                $files = scandir($dir);
+                            ?>
+
+                            <div class="row">
+                                <?php 
+                                    foreach ($files as $file) :
+                                    $file_path = $dir . $file;
+                                    $extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+
+                                    if (is_file($file_path) && in_array($extension, $allowed_extensions)) :
+                                        $image_url = base_url('assets/ndvi/' . $file);
+                                ?>
+                                <div class="col-md-4 mb-3">
+                                    <div class="card">
+                                        <div class="card-header text-center">
+                                            <p class="filename-hover"><?= $file ?></p>
+                                        </div>
+                                        <div class="card-body text-center">
+                                            <img src="<?= $image_url ?>" class="img-fluid" alt="NDVI Image">
+                                        </div>
+                                    </div>
+                                </div>
+                                <?php 
+                                    endif; 
+                                    endforeach; ?>
+                            </div>
                         </h1>
                         <div class="card-tools d-flex">
                           

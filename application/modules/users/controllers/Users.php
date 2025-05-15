@@ -26,14 +26,76 @@ class Users extends MX_Controller {
 	}
 
 	public function upload_ndvi(){
-		// $data['information'] = $this->checkdata();
-		$data['users'] = $this->model->getResult('users');
+        $data['users'] = $this->model->getResult('users');
 
 		$this->load->view('head');
 		$this->load->view('topnavbar');
 		$this->load->view('sidebar',$data);
 		$this->load->view('upload_ndvi');
 		$this->load->view('footer');
+	}
+
+	public function upload_ndvi_process(){
+        $config['upload_path']   = './assets/ndvi';
+        $config['allowed_types'] = 'jpg|png|jpeg|gif|webp';
+        $config['max_size']      = 2048; // in KB
+        $config['mime_types'] = [
+		    'webp' => 'image/webp',
+		];
+
+        $this->upload->initialize($config);
+       
+        // if ( ! $this->upload->do_upload('nir_image')) {
+        //     $error = $this->upload->display_errors();
+        //     $this->session->set_flashdata('message', $error);
+	       //  $this->session->set_flashdata('icon', 'error');
+        // } else {
+        //     $file_name = $this->upload->data()['file_name'];
+        //     $this->session->set_flashdata('message', 'Successfully added!');
+	       //  $this->session->set_flashdata('icon', 'success');
+        // }
+
+        if (! $this->upload->do_upload('nir_image')) {
+		    $error = $this->upload->display_errors();
+		    $this->session->set_flashdata('message', 'NIR Image Error: ' . $error);
+		    $this->session->set_flashdata('icon', 'error');
+		    redirect('your_redirect_url'); // stop further execution
+		}
+
+		// Store NIR image data temporarily
+		$nir_data = $this->upload->data();
+
+        // if ( ! $this->upload->do_upload('red_image')) {
+        //     $error = $this->upload->display_errors();
+        //     $this->session->set_flashdata('message', $error);
+	       //  $this->session->set_flashdata('icon', 'error');
+        // } else {
+        //     $file_name = $this->upload->data()['file_name'];
+        //     $this->session->set_flashdata('message', 'Successfully added!');
+	       //  $this->session->set_flashdata('icon', 'success');
+        // }
+        //  var_dump( $error);
+        // exit;
+
+        if (! $this->upload->do_upload('red_image')) {
+		    // If RED upload fails, delete the NIR image to rollback
+		    if (file_exists($nir_data['full_path'])) {
+		        unlink($nir_data['full_path']);
+		    }
+
+		    $error = $this->upload->display_errors();
+		    $this->session->set_flashdata('message', 'Red Image Error: ' . $error);
+		    $this->session->set_flashdata('icon', 'error');
+		    redirect('your_redirect_url'); // stop further execution
+		}
+
+		// If both succeed
+		$red_data = $this->upload->data();
+
+		// Now you can process/save $nir_data and $red_data
+		$this->session->set_flashdata('message', 'Both images uploaded successfully!');
+		$this->session->set_flashdata('icon', 'success');
+        redirect('users/ndvi_result');
 	}
 
 	public function ndvi_result(){

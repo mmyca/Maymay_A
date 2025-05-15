@@ -37,38 +37,6 @@
     }
   })
 </script>
-<script>
-    function onScanSuccess(decodedText, decodedResult) {
-        // Show the QR code result in the modal
-        document.getElementById('qr-result').innerHTML = `<p>Scanned QR Code: <strong>${decodedText}</strong></p>`;
-
-        // Optionally, send data to the server
-        // You can send the decodedText to the server using an AJAX request
-        $.ajax({
-            url: '<?= base_url("admin/handleQRScan"); ?>', // Your server URL for handling the scan
-            type: 'POST',
-            data: {qrData: decodedText},
-            success: function(response) {
-                console.log(response);
-                // Handle the server response here
-            }
-        });
-
-        // Stop the QR scanner after successful scan
-        html5QrcodeScanner.clear();
-    }
-
-    // Initialize the QR scanner
-    var html5QrcodeScanner = new Html5QrcodeScanner(
-        "qr-reader", 
-        {
-            fps: 10, 
-            qrbox: 250
-        },
-        true
-    );
-
-    html5QrcodeScanner.render(onScanSuccess);
-</script>
+<?php $this->session->set_flashdata('message','');?>
 </body>
 </html>

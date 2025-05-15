@@ -24,15 +24,15 @@
 							    <div class="card-header">
 							        <h3 class="card-title">Upload NDVI Images</h3>
 							    </div>
-							    <form action="<?= site_url('ndvi/upload') ?>" method="post" enctype="multipart/form-data">
+							    <form action="<?= base_url('users/upload_ndvi_process') ?>" method="post" enctype="multipart/form-data">
 							        <div class="card-body">
 							            <div class="form-group">
 							                <label for="nir_image">NIR Image</label>
-							                <input type="file" class="form-control-file" name="nir_image" id="nir_image" required>
+							                <input type="file" class="form-control-file" name="nir_image" id="nir_image" accept=".jpg,.jpeg,.png,.gif" required>
 							            </div>
 							            <div class="form-group">
 							                <label for="red_image">Red Image</label>
-							                <input type="file" class="form-control-file" name="red_image" id="red_image" required>
+							                <input type="file" class="form-control-file" name="red_image" id="red_image" accept=".jpg,.jpeg,.png,.gif" required>
 							            </div>
 							        </div>
 							        <div class="card-footer">

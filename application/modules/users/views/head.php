@@ -13,6 +13,18 @@
             font-size: 2rem!important;
             color: black!important;
         }
+
+        .filename-hover {
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0s, opacity 0.3s ease;
+            font-weight: bold;
+        }
+
+        .card:hover .filename-hover {
+            visibility: visible;
+            opacity: 1;
+        }
     </style>
     <!-- Include Bootstrap CSS and JS -->
     <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
