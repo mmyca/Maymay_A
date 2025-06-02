@@ -27,27 +27,22 @@
                             ?>
 
                             <div class="row">
-                                <?php 
-                                    foreach ($files as $file) :
+                                <?php foreach ($files as $file) :
                                     $file_path = $dir . $file;
                                     $extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
 
                                     if (is_file($file_path) && in_array($extension, $allowed_extensions)) :
                                         $image_url = base_url('assets/ndvi/' . $file);
                                 ?>
-                                <div class="col-md-4 mb-3">
-                                    <div class="card">
-                                        <div class="card-header text-center">
-                                            <p class="filename-hover"><?= $file ?></p>
-                                        </div>
-                                        <div class="card-body text-center">
-                                            <img src="<?= $image_url ?>" class="img-fluid" alt="NDVI Image">
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card">
+                                            <!-- Filename removed from visible header -->
+                                            <div class="card-body text-center">
+                                                <img src="<?= $image_url ?>" class="img-fluid" alt="NDVI Image" title="<?= $file ?>">
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <?php 
-                                    endif; 
-                                    endforeach; ?>
+                                <?php endif; endforeach; ?>
                             </div>
                         </h1>
                         <div class="card-tools d-flex">
